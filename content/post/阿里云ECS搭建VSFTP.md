@@ -33,22 +33,26 @@ yum install ftp
 
 查看vsftpd服务的状态
 
-```systemctl status vsftpd.service```
+```
+systemctl status vsftpd.service
+```
 
 开启vsftpd服务systemctl 
 
-```start vsftpd.service```
+```
+start vsftpd.service
+```
 
 此时，启动报错：
 
-```
+```java
 [root@VM_0_2_centos /]# systemctl start vsftpd
 Job for vsftpd.service failed because the control process exited with error code. See "systemctl status vsftpd.service" and "journalctl -xe" for details.
 ```
 
 先查看是否端口占用
 
-```
+```java
 [root@VM_0_2_centos /]# lsof -i:21
 COMMAND     PID USER   FD   TYPE  DEVICE SIZE/OFF NODE NAME
 pure-ftpd 16235 root    4u  IPv4 1014289      0t0  TCP *:ftp (LISTEN)
@@ -60,7 +64,7 @@ pure-ftpd 16235 root    5u  IPv6 1014290      0t0  TCP *:ftp (LISTEN)
 
 再启动
 
-```
+```java
 [root@VM_0_2_centos /]# systemctl start vsftpd
 [root@VM_0_2_centos /]# systemctl status vsftpd
 ● vsftpd.service - Vsftpd ftp daemon
@@ -75,7 +79,7 @@ pure-ftpd 16235 root    5u  IPv6 1014290      0t0  TCP *:ftp (LISTEN)
 
 设置vsftpd服务开机自启动
 
-```
+```java
 systemctl enable vsftpd.service
 ```
 
@@ -108,11 +112,15 @@ vi /etc/vsftpd/vsftpd.conf
 
 关闭匿名访问：
 
+
+
 ```
 anonymous_enable=NO
 ```
 
 去掉local_enable的注释，修改为开启：
+
+
 
 ```
 local_enable=YES
@@ -120,15 +128,21 @@ local_enable=YES
 
 限制用户仅能访问自己的主目录：
 
+
+
 ```
 chroot_local_user=YES
 ```
 
 设置用户的主目录：（不设置时，默认为用户的家目录/home/userftp）
 
+
+
 ```
 local_root=/data/test
 ```
+
+
 
 重启服务：
 
@@ -137,6 +151,8 @@ systemctl restart vsftpd.service
 ```
 
 ### 连接测试
+
+
 
 ```
 ftp 47.98.169.0.22
@@ -151,6 +167,8 @@ ftp>bye
 
 
 ### 使用ftp工具连接
+
+
 
 使用FileZilla连接，输入主机和用户密码后报
 
