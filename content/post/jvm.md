@@ -33,7 +33,7 @@ contentCopyright: '<a href="https://github.com/gohugoio/hugoBasicExample" rel="n
 
 
 
-![](static\images\2019\JVM.png)
+![](/images/2019/JVM.png)
 
 
 
@@ -94,7 +94,7 @@ To Survivor 区 )和老年代。
 
 
 
- ![](static\images\2019\JVM运行时内存.png)
+ ![](/images/2019/JVM运行时内存.png)
 
 
 
