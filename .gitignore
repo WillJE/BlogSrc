@@ -1,0 +1,13 @@
+### Hugo ###
+# Generated files by hugo
+# /public/
+/resources/_gen/
+# /themes/
+
+# Executable may be added to repository
+hugo.exe
+hugo.darwin
+hugo.linux
+
+# OSX
+.DS_Store
