@@ -1,7 +1,8 @@
 ---
 title: "从一个yaml文件读取多个文档"
 date: 2021-04-17T16:25:38+08:00
-draft: true
+draft: false
+tags: [yaml]
 ---
 
 # 简单需求

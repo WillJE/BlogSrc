@@ -1,7 +1,8 @@
 ---
 title: "Go函数的参数传递方式是值传递"
 date: 2021-03-20T16:29:27+08:00
-draft: true
+draft: false
+categories: [go]
 ---
 
 # 什么是传值（值传递）
