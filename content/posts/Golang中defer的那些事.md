@@ -1,7 +1,9 @@
 ---
 title: "Golang中defer的那些事"
 date: 2021-04-05T12:13:54+08:00
-draft: true
+draft: false
+categories: [go]
+tags: [defer]
 ---
 
 Golang中的defer关键字实现比较特殊的功能，按照官方的解释，defer后面的表达式会被放入一个列表中，在当前方法返回的时候，列表中的表达式就会被执行。一个方法中可以在一个或者多个地方使用defer表达式，这也是前面提到的，为什么需要用一个列表来保存这些表达式。在Golang中，defer表达式通常用来处理一些清理和释放资源的操作。

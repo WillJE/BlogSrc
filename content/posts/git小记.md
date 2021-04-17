@@ -1,7 +1,8 @@
 ---
 title: "Git小记"
 date: 2020-10-05T12:10:00+08:00
-draft: true
+draft: false
+categories: [git]
 ---
 
 # 分支
