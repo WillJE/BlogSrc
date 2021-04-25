@@ -1,52 +1,104 @@
-baseURL = "http://example.org/"
-# [en, zh-cn, fr, ...] 设置默认的语言
-defaultContentLanguage = "zh-cn"
-# 网站语言, 仅在这里 CN 大写
-languageCode = "zh-CN"
-# 是否包括中日韩文字
-hasCJKLanguage = true
-# 网站标题
-title = "Will's Blog"
+baseURL = "https://willje.github.io"
+languageCode = "en"
+defaultContentLanguage = "zh-hans"
+title = "will's blog"
+theme = "hermit"
+# enableGitInfo = true
+pygmentsCodefences  = true
+pygmentsUseClasses  = true
+# hasCJKLanguage = true  # If Chinese/Japanese/Korean is your main content language, enable this to make wordCount works right.
+rssLimit = 10  # Maximum number of items in the RSS feed.
+copyright = "本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 will 和出处链接。" # This message is only used by the RSS template.
+summarylength = 180
+enableEmoji = true  # Shorthand emojis in content files - https://gohugo.io/functions/emojify/
+# googleAnalytics = "'UA-18275235-2"
+# disqusShortname = "yourdiscussshortname"
 
-# 更改使用 Hugo 构建网站时使用的默认主题
-theme = "LoveIt"
+[author]
+  name = "will"
+
+[taxonomies]
+  tag = "tags"
+  categories = "categories"
 
 [params]
-  # LoveIt 主题版本
-  version = "0.2.X"
+  since = "2019"
+  toc = true
+
+  dateform        = "Jan 2, 2006"
+  dateformShort   = "Jan 2"
+  dateformNum     = "2006-01-02"
+  dateformNumTime = "2006-01-02 15:04 -0700"
+
+  # Metadata mostly used in document's head
+  description = "go,golang,源码分析,系列教程"
+  # images = [""]
+  themeColor = "#fcfcfc"
+
+  homeSubtitle = "Go, Java&PHP, 服务端, 职场"
+  # bgImg = ""  # Homepage background-image URL
+
+  # Toggling this option needs to rebuild SCSS, requires Hugo extended version
+  justifyContent = false  # Set "text-align: justify" to `.content`.
+
+  relatedPosts = true  # Add a related content section to all single posts page
+
+  code_copy_button = false # Turn on/off the code-copy-button for code-fields
+
+  mainSections = ["posts"]
+  
+    # Add custom css
+  customCSS = ["https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css", "css/styles.css"]
+
+[related]
+  includeNewer = true
+  threshold = 80
+  toLower = true
+
+  [[related.indices]]
+    name = "keywords"
+    weight = 100
+    includeNewer = true
+    toLower = true
+
+  [[related.indices]]
+    name = "tags"
+    weight = 100
+    includeNewer = true
+    toLower = true
+
+  [[related.indices]]
+    name = "date"
+    weight = 1
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
 
 [menu]
-  [[menu.main]]
-    identifier = "posts"
-    # 你可以在名称 (允许 HTML 格式) 之前添加其他信息, 例如图标
-    pre = ""
-    # 你可以在名称 (允许 HTML 格式) 之后添加其他信息, 例如图标
-    post = ""
-    name = "文章"
-    url = "/posts/"
-    # 当你将鼠标悬停在此菜单链接上时, 将显示的标题
-    title = ""
-    weight = 1
-  [[menu.main]]
-    identifier = "tags"
-    pre = ""
-    post = ""
-    name = "标签"
-    url = "/tags/"
-    title = ""
-    weight = 2
-  [[menu.main]]
-    identifier = "categories"
-    pre = ""
-    post = ""
-    name = "分类"
-    url = "/categories/"
-    title = ""
-    weight = 3
 
-# Hugo 解析文档的配置
-[markup]
-  # 语法高亮设置 (https://gohugo.io/content-management/syntax-highlighting)
-  [markup.highlight]
-    # false 是必要的设置 (https://github.com/dillonzq/LoveIt/issues/158)
-    noClasses = false
+  [[menu.main]]
+    name = "文章"
+    url = "posts/"
+    weight = 10
+
+  [[menu.main]]
+    name = "标签"
+    url = "tags/"
+    weight = 10
+
+  [[menu.nav]]
+    name = "首页"
+    url = "/"
+    weight = 8
+
+
+  [[menu.nav]]
+    name = "归档"
+    url = "/posts/"
+    weight = 14
+
+  
+
+
+
