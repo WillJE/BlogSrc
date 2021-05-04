@@ -6,8 +6,6 @@ isCJKLanguage: true
 categories: [go]
 ---
 
-# 深入 Go 语言之 goroutine 并发控制与通信
-
 > 开发go程序的时候，时常需要使用goroutine并发处理任务，有时候这些goroutine是相互独立的，而有的时候，多个goroutine之间常常是需要同步与通信的。另一种情况，主goroutine需要控制它所属的子goroutine，总结起来，实现多个goroutine间的同步与通信大致有：
 
 - 全局共享变量
@@ -44,30 +42,30 @@ goroutine作为go语言的并发利器，不仅性能强劲而且使用方便：
 示例如下：
 
 ```go
- 1package main
- 2
- 3import (
- 4	"fmt"
- 5	"time"
- 6)
- 7
- 8func main() {
- 9	running := true
-10	f := func() {
-11		for running {
-12			fmt.Println("sub proc running...")
-13			time.Sleep(1 * time.Second)
-14		}
-15		fmt.Println("sub proc exit")
-16	}
-17	go f()
-18	go f()
-19	go f()
-20	time.Sleep(2 * time.Second)
-21	running = false
-22	time.Sleep(3 * time.Second)
-23	fmt.Println("main proc exit")
-24}
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	running := true
+	f := func() {
+		for running {
+			fmt.Println("sub proc running...")
+			time.Sleep(1 * time.Second)
+		}
+		fmt.Println("sub proc exit")
+	}
+	go f()
+	go f()
+	go f()
+	time.Sleep(2 * time.Second)
+	running = false
+	time.Sleep(3 * time.Second)
+	fmt.Println("main proc exit")
+}
 ```
 
 
@@ -90,51 +88,52 @@ goroutine作为go语言的并发利器，不仅性能强劲而且使用方便：
 先来看示例代码：
 
 ```go
- 1package main
- 2
- 3import (
- 4	"fmt"
- 5	"os"
- 6	"os/signal"
- 7	"sync"
- 8	"syscall"
- 9	"time"
-10)
-11
-12func consumer(stop <-chan bool) {
-13	for {
-14		select {
-15		case <-stop:
-16			fmt.Println("exit sub goroutine")
-17			return
-18		default:
-19			fmt.Println("running...")
-20			time.Sleep(500 * time.Millisecond)
-21		}
-22	}
-23}
-24func main() {
-25	stop := make(chan bool)
-26	var wg sync.WaitGroup
-27	// Spawn example consumers
-28	for i := 0; i < 3; i++ {
-29		wg.Add(1)
-30		go func(stop <-chan bool) {
-31			defer wg.Done()
-32			consumer(stop)
-33		}(stop)
-34	}
-35	waitForSignal()
-36	close(stop)
-37	fmt.Println("stopping all jobs!")
-38	wg.Wait()
-39}
-40func waitForSignal() {
-41	sigs := make(chan os.Signal)
-42	signal.Notify(sigs, os.Interrupt)
-43	signal.Notify(sigs, syscall.SIGTERM)
-44	<-sigs
-45}
+package main
+
+import (
+	"fmt"
+	"os"
+	"os/signal"
+	"sync"
+	"syscall"
+	"time"
+)
+
+func consumer(stop <-chan bool) {
+	for {
+		select {
+		case <-stop:
+			fmt.Println("exit sub goroutine")
+			return
+		default:
+			fmt.Println("running...")
+			time.Sleep(500 * time.Millisecond)
+		}
+	}
+}
+func main() {
+	stop := make(chan bool)
+	var wg sync.WaitGroup
+	// Spawn example consumers
+	for i := 0; i < 3; i++ {
+		wg.Add(1)
+		go func(stop <-chan bool) {
+			defer wg.Done()
+			consumer(stop)
+		}(stop)
+	}
+	waitForSignal()
+	close(stop)
+	fmt.Println("stopping all jobs!")
+	wg.Wait()
+}
+func waitForSignal() {
+	sigs := make(chan os.Signal)
+	signal.Notify(sigs, os.Interrupt)
+	signal.Notify(sigs, syscall.SIGTERM)
+	<-sigs
+}
+
 ```
 
 
@@ -166,26 +165,26 @@ goroutine作为go语言的并发利器，不仅性能强劲而且使用方便：
 channel 实现集中在文件 [runtime/chan.go](https://github.com/golang/go/blob/master/src/runtime/chan.go) 中，channel底层数据结构是这样的：
 
 ```go
- 1type hchan struct {
- 2	qcount   uint           // 队列中数据个数
- 3	dataqsiz uint           // channel 大小
- 4	buf      unsafe.Pointer // 存放数据的环形数组
- 5	elemsize uint16         // channel 中数据类型的大小
- 6	closed   uint32         // 表示 channel 是否关闭
- 7	elemtype *_type         // 元素数据类型
- 8	sendx    uint           // send 的数组索引
- 9	recvx    uint           // recv 的数组索引
-10	recvq    waitq          // 由 recv 行为（也就是 <-ch）阻塞在 channel 上的 goroutine 队列
-11	sendq    waitq          // 由 send 行为 (也就是 ch<-) 阻塞在 channel 上的 goroutine 队列
-12
-13	// lock protects all fields in hchan, as well as several
-14	// fields in sudogs blocked on this channel.
-15	//
-16	// Do not change another G's status while holding this lock
-17	// (in particular, do not ready a G), as this can deadlock
-18	// with stack shrinking.
-19	lock mutex
-20}
+ type hchan struct {
+ 	qcount   uint           // 队列中数据个数
+ 	dataqsiz uint           // channel 大小
+ 	buf      unsafe.Pointer // 存放数据的环形数组
+ 	elemsize uint16         // channel 中数据类型的大小
+ 	closed   uint32         // 表示 channel 是否关闭
+ 	elemtype *_type         // 元素数据类型
+ 	sendx    uint           // send 的数组索引
+ 	recvx    uint           // recv 的数组索引
+	recvq    waitq          // 由 recv 行为（也就是 <-ch）阻塞在 channel 上的 goroutine 队列
+	sendq    waitq          // 由 send 行为 (也就是 ch<-) 阻塞在 channel 上的 goroutine 队列
+
+	// lock protects all fields in hchan, as well as several
+	// fields in sudogs blocked on this channel.
+	//
+	// Do not change another G's status while holding this lock
+	// (in particular, do not ready a G), as this can deadlock
+	// with stack shrinking.
+	lock mutex
+}
 ```
 
 从源码可以看出它其实就是一个队列加一个锁（轻量），代码本身不复杂，但涉及到上下文很多细节，故而不易通读，有兴趣的同学可以去看一下，我的建议是，从上面总结的两个功能点出发，一个是 ring buffer，用于存数据； 一个是存放操作（读写）该channel的goroutine 的队列。
@@ -235,78 +234,79 @@ Context的创建和调用关系是层层递进的，也就是我们通常所说�
 话不多说，上码：
 
 ```go
- 1package main
- 2
- 3import (
- 4	"context"
- 5	"crypto/md5"
- 6	"fmt"
- 7	"io/ioutil"
- 8	"net/http"
- 9	"sync"
-10	"time"
-11)
-12
-13type favContextKey string
-14
-15func main() {
-16	wg := &sync.WaitGroup{}
-17	values := []string{"https://www.baidu.com/", "https://www.zhihu.com/"}
-18	ctx, cancel := context.WithCancel(context.Background())
-19
-20	for _, url := range values {
-21		wg.Add(1)
-22		subCtx := context.WithValue(ctx, favContextKey("url"), url)
-23		go reqURL(subCtx, wg)
-24	}
-25
-26	go func() {
-27		time.Sleep(time.Second * 3)
-28		cancel()
-29	}()
-30
-31	wg.Wait()
-32	fmt.Println("exit main goroutine")
-33}
-34
-35func reqURL(ctx context.Context, wg *sync.WaitGroup) {
-36	defer wg.Done()
-37	url, _ := ctx.Value(favContextKey("url")).(string)
-38	for {
-39		select {
-40		case <-ctx.Done():
-41			fmt.Printf("stop getting url:%s\n", url)
-42			return
-43		default:
-44			r, err := http.Get(url)
-45			if r.StatusCode == http.StatusOK && err == nil {
-46				body, _ := ioutil.ReadAll(r.Body)
-47				subCtx := context.WithValue(ctx, favContextKey("resp"), fmt.Sprintf("%s%x", url, md5.Sum(body)))
-48				wg.Add(1)
-49				go showResp(subCtx, wg)
-50			}
-51			r.Body.Close()
-52			//启动子goroutine是为了不阻塞当前goroutine，这里在实际场景中可以去执行其他逻辑，这里为了方便直接sleep一秒
-53			// doSometing()
-54			time.Sleep(time.Second * 1)
-55		}
-56	}
-57}
-58
-59func showResp(ctx context.Context, wg *sync.WaitGroup) {
-60	defer wg.Done()
-61	for {
-62		select {
-63		case <-ctx.Done():
-64			fmt.Println("stop showing resp")
-65			return
-66		default:
-67			//子goroutine里一般会处理一些IO任务，如读写数据库或者rpc调用，这里为了方便直接把数据打印
-68			fmt.Println("printing: ", ctx.Value(favContextKey("resp")))
-69			time.Sleep(time.Second * 1)
-70		}
-71	}
-72}
+package main
+
+import (
+	"context"
+	"crypto/md5"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"sync"
+	"time"
+)
+
+type favContextKey string
+
+func main() {
+	wg := &sync.WaitGroup{}
+	values := []string{"https://www.baidu.com/", "https://www.zhihu.com/"}
+	ctx, cancel := context.WithCancel(context.Background())
+
+	for _, url := range values {
+		wg.Add(1)
+		subCtx := context.WithValue(ctx, favContextKey("url"), url)
+		go reqURL(subCtx, wg)
+	}
+
+	go func() {
+		time.Sleep(time.Second * 3)
+		cancel()
+	}()
+
+	wg.Wait()
+	fmt.Println("exit main goroutine")
+}
+
+func reqURL(ctx context.Context, wg *sync.WaitGroup) {
+	defer wg.Done()
+	url, _ := ctx.Value(favContextKey("url")).(string)
+	for {
+		select {
+		case <-ctx.Done():
+			fmt.Printf("stop getting url:%s\n", url)
+			return
+		default:
+			r, err := http.Get(url)
+			if r.StatusCode == http.StatusOK && err == nil {
+				body, _ := ioutil.ReadAll(r.Body)
+				subCtx := context.WithValue(ctx, favContextKey("resp"), fmt.Sprintf("%s%x", url, md5.Sum(body)))
+				wg.Add(1)
+				go showResp(subCtx, wg)
+			}
+			r.Body.Close()
+			//启动子goroutine是为了不阻塞当前goroutine，这里在实际场景中可以去执行其他逻辑，这里为了方便直接sleep一秒
+			// doSometing()
+			time.Sleep(time.Second * 1)
+		}
+	}
+}
+
+func showResp(ctx context.Context, wg *sync.WaitGroup) {
+	defer wg.Done()
+	for {
+		select {
+		case <-ctx.Done():
+			fmt.Println("stop showing resp")
+			return
+		default:
+			//子goroutine里一般会处理一些IO任务，如读写数据库或者rpc调用，这里为了方便直接把数据打印
+			fmt.Println("printing: ", ctx.Value(favContextKey("resp")))
+			time.Sleep(time.Second * 1)
+		}
+	}
+}
+
 ```
 
 前面我们说过Context就是设计用来解决那种多个goroutine处理一个Request且这多个goroutine需要共享Request的一些信息的场景，以上是一个简单模拟上述过程的demo。
