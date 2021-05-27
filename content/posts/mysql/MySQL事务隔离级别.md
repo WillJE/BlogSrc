@@ -256,7 +256,7 @@ insert into t_transaction(id,account) value(3,1000)；
 
 ###### 结论
 
-此处需要注意的是，因为我们使用的Innodb引擎，所以此处不会产生幻读，其他引擎的话在这个隔离级别可能会产生幻读（至于为什么说Innodb不会，且听下回分解，其实MySQL 利用锁机制和MVCC避免了这个问题，感兴趣的同学可以自行查阅）
+此处需要注意的是，因为我们使用的Innodb引擎，所以此处不会产生幻读，其他引擎的话在这个隔离级别可能会产生幻读，至于为什么说Innodb不会，[其实MySQL 利用锁机制和MVCC避免了这个问题](https://willje.github.io/posts/mysql/mysql-mvcc%E6%9C%BA%E5%88%B6/)。
 
 #### Serializable
 

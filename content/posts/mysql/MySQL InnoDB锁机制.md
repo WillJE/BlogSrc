@@ -1,6 +1,6 @@
 ---
-title: "MySQL_InnoDB锁机制"
-date: 2021-05-09T21:23:18+08:00
+title: "MySQL InnoDB锁机制"
+date: 2020-04-23T21:23:18+08:00
 toc: true
 isCJKLanguage: true
 tags: 
