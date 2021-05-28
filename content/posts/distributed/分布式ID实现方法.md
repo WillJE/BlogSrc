@@ -1,6 +1,15 @@
-## 分布式ID实现方法
+---
+title: "分布式ID实现方法"
+date: 2021-05-27T22:34:22+08:00
+toc: true
+isCJKLanguage: true
+tags: 
+  - 分布式
+---
 
-[一口气说出9种分布式ID生成方式，面试官有点懵了- 知乎](https://zhuanlan.zhihu.com/p/107939861)
+
+
+## 实现方式
 
 ### UUID
 
@@ -227,3 +236,6 @@ leaf.snowflake.port=2181
 
 snowflake模式获取分布式自增ID的测试url：[http://localhost:8080/api/snow](https://link.zhihu.com/?target=http%3A//localhost%3A8080/api/snowflake/get/test)
 
+## 参考链接
+
+[一口气说出9种分布式ID生成方式，面试官有点懵了- 知乎](https://zhuanlan.zhihu.com/p/107939861)
