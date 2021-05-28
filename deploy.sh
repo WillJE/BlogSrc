@@ -1,6 +1,6 @@
 #!/bin/sh
 
-hugo
+hugo serve
 
 cp -rf public/* ../WillJE.github.io/docs/
 
