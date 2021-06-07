@@ -1,4 +1,12 @@
-# Java并发之CAS原理分析
+---
+title: "Java并发之CAS原理分析"
+date: 2019-06-29T20:55:29+08:00
+toc: true
+isCJKLanguage: true
+tags: 
+  - Java
+  - CAS
+---
 
 CAS（Compare-and-Swap），即比较并替换，是一种实现并发算法时常用到的技术，Java并发包中的很多类都使用了CAS技术。
 

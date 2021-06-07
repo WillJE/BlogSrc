@@ -1,3 +1,13 @@
+---
+title: "SpringCloudNacos使用"
+date: 2021-06-25T20:55:29+08:00
+toc: true
+isCJKLanguage: true
+tags: 
+  - SpringCloud
+  - Nacos
+---
+
 Nacos 是 Spring Cloud Alibaba 核心组件之一，可以用作 Spring Cloud 的注册中心和配置中心。
 
 本文讲述如何在 Spring Cloud 中使用 Nacos 作为配置中心。
