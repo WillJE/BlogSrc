@@ -458,4 +458,5 @@ https://github.com/WillJE/spring_boot_nacos
 - [Spring Cloud Alibaba基础教程：Nacos的数据持久化](https://blog.didispace.com/spring-cloud-alibaba-4/)
 -  [Spring Cloud Alibaba基础教程：Nacos配置的多文件加载与共享配置](https://blog.didispace.com/spring-cloud-alibaba-nacos-config-3/)
 - [Spring Cloud Alibaba基础教程：Nacos配置的多环境管理](https://blog.didispace.com/spring-cloud-alibaba-nacos-config-2/)
+- [Nacos 集群部署模式最佳实践- 徐靖峰|个人博客](https://www.cnkirito.moe/nacos-cluster-mode/)
 
