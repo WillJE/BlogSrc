@@ -441,6 +441,111 @@ public class ConsumerController {
 
 > Hello Nacos Discovery will.me
 
+## 子项目-nacos-sidecar使用
+
+### 创建sidecar应用
+
+首先创建一个简单的web服务simple-web作为sidecar；
+
+```java
+@SpringBootApplication
+@RestController
+public class SimpleWebApplicationClass {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SimpleWebApplicationClass.class,args);
+    }
+
+    @GetMapping("/health")
+    public String health(){
+        return "{\"status\":\"UP\"}";
+    }
+
+    @GetMapping("/hello")
+    public String hello(){
+        return "I'm not java";
+    }
+}
+```
+端口
+```yaml
+server:
+  port: 8081
+```
+
+### sidecar-simple模块
+
+然后创建一个nacos-sidecar模块测试，pom文件如下
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-sidecar</artifactId>
+        <version>2.1.1.RELEASE</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        <version>2.1.1.RELEASE</version>
+    </dependency>
+</dependencies>
+```
+
+主要看配置文件
+
+```yaml
+server:
+  port: 8088
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+  application:
+    name: sidecar-simple
+# 配置异构服务
+sidecar:
+  ip: localhost
+  port: 8081
+  health-check-url: http://localhost:8081/health
+```
+
+我们将这个服务也注册进nacos中，这里和前面nacos-provider不同的是，这里增加了sidecar，也就是我们之前创建的springboot web应用；
+
+### consumer消费
+
+这时，在之前创建的nacosconsumer模块中增加一个controller
+
+```java
+@RestController
+public class SideCarConsumer {
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @GetMapping("/hello")
+    public String hello() {
+        return restTemplate.getForObject("http://sidecar-simple/hello", String.class);
+    }
+
+    @GetMapping("/health")
+    public String health() {
+        return restTemplate.getForObject("http://sidecar-simple/health", String.class);
+    }
+}
+```
+
+这里使用服务访问而不是通过ip访问，``sidecar-simple``对应的前面创建的带有sidecar的服务；
+
+然后将三个应用启动，访问``http://localhost:8088/hello``和访问``http://localhost:8088/health``即能访问到前面创建的springboot web应用，而这个应用我们是没有注册到nacos中的。
+
 ## 附：源代码
 
 完整的源代码请参考：
@@ -459,4 +564,5 @@ https://github.com/WillJE/spring_boot_nacos
 -  [Spring Cloud Alibaba基础教程：Nacos配置的多文件加载与共享配置](https://blog.didispace.com/spring-cloud-alibaba-nacos-config-3/)
 - [Spring Cloud Alibaba基础教程：Nacos配置的多环境管理](https://blog.didispace.com/spring-cloud-alibaba-nacos-config-2/)
 - [Nacos 集群部署模式最佳实践- 徐靖峰|个人博客](https://www.cnkirito.moe/nacos-cluster-mode/)
+- [nacos-sidecar应用](https://gitee.com/kkk0713/nacos-sidecar/tree/master)
 
