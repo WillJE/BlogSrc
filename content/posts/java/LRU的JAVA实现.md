@@ -1,3 +1,12 @@
+---
+title: "LRU的JAVA实现"
+date: 2018-04-25T20:55:29+08:00
+toc: true
+isCJKLanguage: true
+tags: 
+  - LRU
+---
+
 什么是LRU算法?
 
 

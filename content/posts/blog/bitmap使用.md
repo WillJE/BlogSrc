@@ -1,3 +1,12 @@
+---
+title: "bitmap使用"
+date: 2018-12-05T20:55:29+08:00
+toc: true
+isCJKLanguage: true
+tags: 
+  - bitmap
+---
+
 ## 什么是bitmap
 
 Bit-map的基本思想就是用一个bit位来标记某个元素对应的Value，而Key即是该元素。由于采用了Bit为单位来存储数据，

@@ -1,3 +1,13 @@
+---
+title: "ELK入门"
+date: 2019-10-13T20:55:29+08:00
+toc: true
+isCJKLanguage: true
+tags: 
+  - ELK
+  - ElasticSearch
+---
+
 ## 介绍
 
 ELK是Elasticsearch、Logstash、Kibana三大开源框架首字母大写简称(但是后期出现的filebeat(beats中的一种)可以用来
