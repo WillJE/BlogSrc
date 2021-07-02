@@ -101,7 +101,7 @@ tags:
 
 - `Read uncommitter`(未提交读) ： 没有解决任何问题
 - `Read Committer`(提交读) ：解决了脏读问题
-- `Repeatable Read`(可重复读)： 解决了不可重复读和脏读问题（ps:在Innodb情况下，也不可能发生幻读问题）
+- `Repeatable Read`(可重复读)： 解决了不可重复读，但没有解决幻读，幻读需要通过 next-key锁辅助解决；[Innodb 中 RR 隔离级别能否防止幻读？](https://github.com/Yhzhtk/note/issues/42)
 - `Serializable`(串行化) ：脏读、幻读、不可重复读三个问题全部解决了
 
 为了更好的介绍以上四种情况，再举个栗子：
