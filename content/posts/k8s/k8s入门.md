@@ -6,6 +6,7 @@ Kubernetes namespace 是用来构建虚拟的资源池；使用 kubernetes names
 
 通过 `kubectl create -f`，我们可以轻松地创建一个 namespace：
 ns.yaml文件如下：
+
 ```yaml
 apiVersion: v1
 kind: Namespace
@@ -211,7 +212,7 @@ spec:
   type: NodePort
 ```
 
-注意这里的type，这个type有四种类型：ClusterIP(默认)、NodePort，LoadBalancer、ExternalName，具体可以看这篇文章：[k8s中的Service与Ingress](https://blog.haohtml.com/archives/19945)。
+注意这里的type，这个type有四种类型：ClusterIP(默认)、NodePort，LoadBalancer、ExternalName，具体可以看这两篇文章：[k8s中的Service与Ingress](https://blog.haohtml.com/archives/19945)。[图解 Kubernetes Service](https://www.qikqiak.com/post/visually-explained-k8s-service/)
 
 - ClusterIP顾名思义就是Service管理的（通过selector或label）pod集群对外访问。当你依次访问ClusterIP的话，会发现每次响应内容不一样，说明后端请求了不同的 pod 。原因是因为 Service 提供的是 `Round Robin `方式的负载均衡。这个IP地址 `10.0.1.175` 是当前集群的IP，俗称为 `VIP`，是 Kubernetes 自动为 Service 分配的。对于这种方式称为 `ClusterIP 模式的 Service`。
 
@@ -450,6 +451,18 @@ IngressRule 的 Key，就叫做：`host`。它必须是一个标准的域名格�
 Nginx Ingress Controller 的示例请参考 https://time.geekbang.org/column/article/69214
 
 推荐参考官方推荐脚本：https://github.com/resouer/kubernetes-ingress/tree/master/examples/complete-example
+
+至此通过一张图来总结一下K8S的网络结构：
+
+![image-20210709091700683](k8s入门.assets/image-20210709091700683.png)
+
+K8S内部的请求处理：
+
+![image-20210709092001687](k8s入门.assets/image-20210709092001687.png)
+
+K8S的外部请求处理
+
+![image-20210709092028497](k8s入门.assets/image-20210709092028497.png)
 
 # Kubernetes Label&Selector
 
