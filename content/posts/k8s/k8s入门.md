@@ -1,3 +1,12 @@
+---
+title: "k8s入门"
+date: 2021-07-23T21:23:18+08:00
+toc: true
+isCJKLanguage: true
+tags: 
+  - kubernetes
+---
+
 # 创建namespace
 
 Kubernetes namespace 是用来构建虚拟的资源池；使用 kubernetes namespace，管理员可以将 kubernetes 划分成多个虚拟的区域，不同的项目或者团队可以使用不同的 namespace，达到了共享 kubernetes 集群资源的目的。此外， namespace 也被用来划分命名空间，即不同 namespace 里的资源可以取相同的名字，相同 namespace 内的资源不能重名。

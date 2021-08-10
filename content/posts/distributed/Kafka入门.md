@@ -1,3 +1,12 @@
+---
+title: "kafka入门"
+date: 2020-07-29T21:23:18+08:00
+toc: true
+isCJKLanguage: true
+tags: 
+  - kafka
+---
+
 Kafka是最初由Linkedin公司开发，是一个分布式、支持分区的（partition）、多副本的（replica），基于zookeeper协调的分布式消息系统，它的最大的特性就是可以实时的处理大量数据以满足各种需求场景：比如基于hadoop的批处理系统、低延迟的实时系统、Storm/Spark流式处理引擎，web/nginx日志、访问日志，消息服务等等，用scala语言编写，Linkedin于2010年贡献给了Apache基金会并成为顶级开源 项目。
 
 # 快速入门

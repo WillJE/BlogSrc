@@ -1,3 +1,11 @@
+---
+title: "k8s概述"
+date: 2021-04-01T16:23:40+08:00
+toc: true
+isCJKLanguage: true
+tags: [kubernetes]
+---
+
 ## 集群架构与组件
 
 Kubernetes 集群架构以及相关的核心组件如下图所示：一个 Kubernetes 集群一般包含一个 Master 节点和多个 Node 节点，一个节点可以看成是一台物理机或虚拟机。
@@ -90,8 +98,6 @@ K8S 集群在启动后，会创建一个名为 default 的 Namespace，如果不
 
 当我们给每个租户创建一个 Namespace 来实现多租户的资源隔离时，还可以结合 K8S 的资源配额管理，限定不同租户能占用的资源，例如 CPU 使用量、内存使用量等。
 
-[回到顶部](https://www.cnblogs.com/chiangchou/p/k8s-1.html#_labelTop)
-
 ## 平台规划
 
 K8S 环境有两种架构方式，单 Master 集群和多 Master 集群，将先搭建起单 Master 集群，再扩展为多 Master 集群。开发、测试环境可以部署单 Master 集群，生产环境为了保证高可用需部署多 Master 集群。
@@ -109,3 +115,8 @@ Etcd 是 K8S 集群的数据库，可以安装在任何地方，也可以与 Mas
 多 Master 集群能保证集群的高可用，相比单 Master 架构，需要一个额外的负载均衡器来负载多个 Master 节点，Node 节点从连接 Master 改成连接 LB 负载均衡器。
 
 ![img](k8s概述.assets/856154-20191029231927413-1474291721.png)
+
+## 参考
+
+[Kubernetes 深入学习（一） —— 入门和集群安装部署](https://www.cnblogs.com/chiangchou/p/k8s-1.html)
+

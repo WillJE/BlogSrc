@@ -1,4 +1,12 @@
-# go并发编程
+---
+title: "go并发小练习"
+date: 2021-07-23T21:23:18+08:00
+toc: true
+isCJKLanguage: true
+tags: 
+  - go
+  - 并发
+---
 
 ```go
 package main
