@@ -237,6 +237,15 @@ WHERE
 
 ***null > system > const > eq_ref > ref > range > index > all***
 
+```sh
+const   # 查询某个唯一的索引键，找到了就立即返回。比如唯一索引
+eq_ref  # 每个索引键只对应一行数据。比如唯一索引
+ref     # 每个索引键可能对应多行数据
+range   # 只检索索引表的某个范围。比如 where...between、in、is null
+index   # 遍历了索引表
+all     # 遍历了全表，效率最低
+```
+
 **一般来说，得保证查询至少达到range级别，最好能达到ref。**
 
 - `system`： 表只有一行记录（等于系统表），这是`const`类型的特列，平时不会出现，这个也可以忽略不计
@@ -308,6 +317,14 @@ explain select * from appadded;
 - `Select tables optimized away`：在没有`GROUP BY`子句的情况下，基于索引优化`MIN/MAX`操作或者对于MyISAM存储引擎优化`COUNT(*)`操作，不必等到执行阶段再进行计算，查询执行计划生成的阶段即完成优化。
 - `Using index`：表示相应的`select`操作中使用了覆盖索引（`Covering Index`），避免访问了表的数据行，效率不错。如果同时出现`using where`，表明索引被用来执行索引键值的查找；如果没有同时出现`using where`，表明索引用来读取数据而非执行查找动作。
 - `Distinct`：优化`distinct`操作，在找到第一匹配的元组后即停止找同样值的动作。
+
+可以主动控制是否使用索引，便于测试索引的效果：
+
+```sql
+explain select * from tb1 use    index(index1) where name='one';  -- 只使用某些索引
+explain select * from tb1 ignore index(index1) where name='one';  -- 忽略某些索引
+explain select * from tb1 force  index(index1) where name='one';  -- 强制使用某些索引
+```
 
 ### 总结
 
