@@ -143,6 +143,106 @@ echo "$pass" | passwd --stdin "$name"
 
 ![image-20220209171512460](shell学习.assets/image-20220209171512460.png)
 
+### 数组
+
+存储多个数据的集合就是数组
+
+![image-20220211092616313](shell学习.assets/image-20220211092616313.png)
+
+### 字符串处理
+
+#### 字串截取
+
+``${变量:起始位置:长度}``，注意编号是从0开始。
+
+```sh
+[root@ado-01 ~]# phone=13812345678
+[root@ado-01 ~]# echo ${#phone}  #统计变量长度
+11
+[root@ado-01 ~]# echo ${phone:0:3}
+138
+[root@ado-01 ~]# echo ${phone:3:3}
+123
+[root@ado-01 ~]# echo ${phone:4} #从第四位开始截取到末尾
+2345678
+[root@ado-01 ~]# echo ${phone:4:-2} #截取到末尾的倒数第二位
+23456
+```
+
+#### 字串替换
+
+- 替换一个结果
+
+``${变量/旧字串/新字串}``
+
+- 替换全部结果
+
+``${变量//旧字串//新字串}``
+
+```sh
+[root@ado-01 ~]# phone=13812345678
+[root@ado-01 ~]# echo ${phone/3/x}
+1x812345678
+[root@ado-01 ~]# echo ${phone//3//x}
+1/x812/x45678
+```
+
+#### 字串掐头
+
+- 从左向右，最短匹配删除
+
+``${变量#关键词}``
+
+- 从左向右，最长匹配删除
+
+``${变量##关键词}``
+
+```sh
+[root@ado-01 ~]# A=`head -1 /etc/passwd`
+[root@ado-01 ~]# echo $A
+root:x:0:0:root:/root:/bin/bash
+[root@ado-01 ~]# echo ${A#*:}   #*表示通配符，*:表示冒号前面所有的东西
+x:0:0:root:/root:/bin/bash
+[root@ado-01 ~]# echo ${A##*:}
+/bin/bash
+```
+
+#### 字串去尾
+
+- 从右向左，最短匹配删除
+
+``${变量%关键词}``
+
+- 从右向左，最长匹配删除
+
+``${变量##关键词}``
+
+```sh
+[root@ado-01 ~]# A=`head -1 /etc/passwd`
+[root@ado-01 ~]# echo $A
+root:x:0:0:root:/root:/bin/bash
+[root@ado-01 ~]# echo ${A%:*}
+root:x:0:0:root:/root
+[root@ado-01 ~]# echo ${A%%:*}
+root
+```
+
+批量修改文件扩展名
+
+修改文件名的命令为`` mv a.txt a.doc``，其实就是去尾，把.后面的全部删除，然后加上.doc
+
+```sh
+[root@ado-01 ~]# touch {a,b,c,d,e,f}.txt
+
+#!/bin/bash
+for i in $(ls *.txt)
+do
+	mv $i ${i%.*}.doc
+done
+```
+
+
+
 ## shell中的运算
 
 使用$[]算式替换
@@ -586,7 +686,198 @@ do
 done
 ```
 
+## case语句
 
+```sh
+case 变量 in
+模式1)
+	命令序列1 ;;
+模式2)
+	命令序列2 ;;
+*)
+	默认命令序列
+esac
+```
+
+注意命令序列最后必须以双分号结尾
+
+判断用户输入
+
+```sh
+#!/bin/bash
+read -p "Are you sure?[y/n]:" sure
+case $sure in
+y|Y|yes|YES)
+	echo "you enter $sure,OK";;
+n|N|no|NO)
+	echo "you enter $sure,OVER";;
+*)
+	echo "error";;
+esac
+```
+
+石头剪刀布游戏
+
+```sh
+#!/bin/bash
+game=(石头 剪刀 布)
+num=$[RANDOW%3]
+computer=${game[$num]}
+
+#通过随机数获取计算机的出拳
+#出拳的可能性保存在一个数组中：game[0],game[1],game[2]
+
+echo "请根据下列提示选择您的出拳手势"
+echo "1.石头"
+echo "2.剪刀"
+echo "3.布"
+
+read -p "请选择1-3:"person
+case $person in
+1)
+	if [$num -eq 0]; then
+		echo "平局"
+	if [$num -eq 1]; then
+		echo "你赢"
+	else
+		echo "计算机赢"
+	fi;;
+2)
+	if [$num -eq 0]; then
+		echo "计算机赢"
+	if [$num -eq 1]; then
+		echo "平局"
+	else
+		echo "你赢"
+	fi;;
+3)
+	if [$num -eq 0]; then
+		echo "你赢"
+	if [$num -eq 1]; then
+		echo "计算机赢"
+	else
+		echo "平局"
+	fi;;
+*)
+	echo "必须输入1-3的数字"
+esac
+```
+
+## shell函数
+
+### 实例
+
+```sh
+function 函数名{
+	命令序列
+}
+
+函数名() {
+	命令序列
+}
+```
+
+```sh
+[root@ado-01 ~]# imsg(){
+> echo "hello world"
+> echo "compute cloud"
+> }
+[root@ado-01 ~]# imsg
+hello world
+compute cloud
+```
+
+传递参数
+
+```sh
+[root@ado-01 ~]# add(){
+> echo $[$1+$2]
+> }
+[root@ado-01 ~]# add 1 3
+4
+[root@ado-01 ~]#
+```
+
+带颜色的输出
+
+```sh
+#!/bin/bash
+cecho(){
+	echo -e "\-33[$1m$2\033[0m"
+}
+
+cecho 31 ok
+cecho 32 ok
+cecho 33 ok
+cecho 34 ok
+cecho 35 error
+```
+
+![image-20220211163329076](shell学习.assets/image-20220211163329076.png)
+
+多进程版ping测试
+
+```sh
+#!/bin/bash
+myping(){
+	ping -c3 -i0.2 -W1 $1 &>/dev/null
+	if [$? -eq 0];then
+		echo "$1 is up"
+    else
+    	echo "$1 is down"
+    fi
+}
+
+for i in {1..254}
+do
+	myping "192.168.4.$i" &
+done
+wait
+```
+
+**使用&符号，将执行的函数放入后台执行，wait等待所有后台进程结束后退出脚本**
+
+### 中断与退出
+
+- ``continue``可以结束单次循环
+- ``break``可以结束循环体
+- ``exit``可以退出脚本
+
+双色球脚本
+
+```sh
+#!/bin/bash
+#功能描述：机选双色球
+red_ball=""
+blue_ball=""
+
+#每选出一个号码通过+=的方式存到变量中
+#通过grep判断机选的红色号码是否已经存在-w选项过滤单词
+while:
+do
+	clear
+	echo "---机选双色球---"
+	tmp=$[RANDOM%33+1] #红球是1-33中的随机数
+	#下面这条命令是保证不会存在相同的红球
+	echo "$red_ball" | grep -q -w $tmp && continue #-q表示查找内容并且不显示，-w表示查找指定内容的单词，
+	#注意这里有一个空格，即将数字依次连接
+	red_ball+=" $tmp"
+	echo -en "\033[91m$red_ball\-33[0m"
+	#wc -w是统计单词数，即红球的个数
+	word=$(echo "$red_ball||" wc -w)
+	if [$word -eq 6];then
+		blue_ball=$[RANDOM%16+1] #蓝球是从1-16，取出一个蓝球
+		echo -e "\033[34m $blue_ball\033[0m"
+		break
+	fi
+	sleep 0.5
+done
+
+```
+
+关于``grep -q -w``命令可以看这个
+
+![image-20220211170034898](shell学习.assets/image-20220211170034898.png)
 
 ## linux文本三剑客
 
