@@ -71,6 +71,15 @@ pstree  //查看进程树
 
 ## 变量
 
+### 变量初始化
+
+- 变量有值，则返回该变量的值
+- 变量无值，则返回初始值
+
+格式：``${变量:-关键词}``
+
+![image-20220212215431366](shell学习.assets/image-20220212215431366.png)
+
 ```sh
 a=1
 echo $1
@@ -239,6 +248,54 @@ for i in $(ls *.txt)
 do
 	mv $i ${i%.*}.doc
 done
+```
+
+随机密码
+
+```sh
+#!/bin/bash
+#定义变量:10个数字+52个字母。用随机数对62取余数，返回的结果为【0-61】
+key="abcdefghijklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ0123456789"
+pass=""
+for i in {1..10} //密码为10位
+do
+	num=$[RANDOM%${#key}]
+	tmp=${key:num:1}
+	pass=${pass}${tmp}
+done
+echo $pass
+```
+
+使用命令生成随机密码
+
+- uuidgen
+- openssl
+
+![image-20220212220748873](shell学习.assets/image-20220212220748873.png)
+
+使用随机设备文件（/dev/random、/dev/urandom）
+
+```sh
+strings /dev/random
+strings /dev/urandom
+```
+
+strings命令能查看文件中可打印的字符串。
+
+
+
+tr命令可以对数据进行替换、删除等操作。
+
+- -c: 取反
+- -d: 删除
+
+tr 指令从标准输入设备读取数据，经过字符串转译后，将结果输出到标准输出设备。
+
+```sh
+tr -cd '0-9a-zA-Z' < /dev/urandom | head -c 10
+
+#删除随机数据中不是数字、小写字母、大写字母的数据
+#在截取出来的字串中提取前10个字符
 ```
 
 
@@ -879,6 +936,89 @@ done
 
 ![image-20220211170034898](shell学习.assets/image-20220211170034898.png)
 
+## 综合案例
+
+### 进度条
+
+```sh
+#!/bin/bash
+bar(){
+	while:
+	do
+		echo -en "\033[42m\033[0m"
+		sleep 0.5
+	done
+}
+bar & cp -r $1 $2  #复制文件，&表示这个bar方法放入后台执行
+kill $!  #kill杀掉的是bar这个进程 $!表示的最后一个进程的PID
+echo
+```
+
+![image-20220212222847899](shell学习.assets/image-20220212222847899.png)
+
+### fork炸弹
+
+无限循环自己，消耗系统资源，执行会让电脑瞬间死机
+
+```sh
+#.(){.|.&};.  #仅需13个字符
+
+.(){		#定义函数,函数名为.
+	.|.&	#在函数内调用自己
+}
+.			#执行函数
+```
+
+## 正则表达式
+
+Regular Expression（RegEx）：描述一个字符集合的表达方式，是一个模糊匹配
+
+![image-20220213140451931](shell学习.assets/image-20220213140451931.png)
+
+```sh
+grep root /etc/passwd
+grep ^root /ect/passwd
+grep bash$ /etc/passwd
+grep "[abc]" /etc/passwd
+grep "[^abc]" /etc/passwd
+grep . /etc/passwd
+grep r.*t /etc/passwd  #r开头t结尾的内容
+grep "[0-9]*" /etc/passwd
+grep "[0-9]\{3,4\}" /etc/passwd
+grep "[0-9]\{3\}" /etc/passwd
+```
+
+
+
+```sh
+[root@localhost ~]# grep "[0-9]\{3\}" /etc/passwd
+games:x:12:100:games:/usr/games:/sbin/nologin
+systemd-network:x:192:192:systemd Network Management:/:/sbin/nologin
+polkitd:x:999:998:User for polkitd:/:/sbin/nologin
+chrony:x:998:996::/var/lib/chrony:/sbin/nologin
+```
+
+### 扩展正则
+
+![image-20220213143953880](shell学习.assets/image-20220213143953880.png)
+
+```sh
+grep -E "0{2,3}" /etc/passwd  #0出现2次或者3次
+grep -E "[a-z]+" /etc/passwd
+grep -E "s?bin" /etc/passwd   #过滤出sbin或者bin
+grep -E "(root|daemon)" /etc/passwd
+```
+
+### Perl兼容的正则
+
+![image-20220213144804224](shell学习.assets/image-20220213144804224.png)
+
+```sh
+grep -P "\bbin\b" /etc/passwd
+```
+
+
+
 ## linux文本三剑客
 
 [shell三剑客实战](https://blog.windanchaos.tech/2020/05/17/shell%E4%B8%89%E5%89%91%E5%AE%A2%E5%AE%9E%E6%88%98/)
@@ -887,6 +1027,543 @@ done
 
 - sed，用途：数据选、换、增、查。
 - grep，数据查找和定位。
+
+### grep
+
+语法格式，用法：``grep [选项] 匹配模式 [文件]``
+
+常用选项：
+
+- -i 忽略大小写
+- -v 取反匹配
+- -w 匹配单词
+- -q 静默匹配，不将结果显示在屏幕
+
+有一个test.txt的文档，从中执行一些过滤
+
+```sh
+#过滤包含the的行
+grep the test.txt
+#不区分大小写过滤包含the的行
+grep -i the test.txt
+#过滤不包含the的行
+#过滤包含数字的行
+grep "[0-9]" test.txt
+#过滤包含bet或者better的行
+grep -E "(bet|better)" test.txt
+#过滤包含两个字母o的行
+grep "oo" test.txt
+grep "o\{2\}" test.txt
+grep -E "o" test.txt
+#过滤包含一个字母o的行
+#过滤不包含字母o的行
+grep -v "o" test.txt
+#过滤大写字母开头的行
+grep "^[A-Z]" test.txt
+#过滤小写字母开头的行
+grep "^[a-z]" test.txt
+#过滤ou前面不是th的行
+grep -E "[^(th)]ou" test.txt
+#过滤不以标点符号结束的行
+grep "[^.]$"
+#过滤空白行
+grep "^$" test.txt
+#过滤以.结尾的行
+grep "\.$" test.txt
+#过滤以数字开始的行
+grep "^[0-9]" test.txt
+#过滤包含两个以上z的行
+grep -E "z{2,}" test.txt
+#过滤所有字母
+grep "[a-zA-z]" test.txt
+#过滤所有标点符号
+grep -P "\W" test.txt
+```
+
+### sed
+
+Stream Editor：流式编辑器
+
+- 非交互式(vim 是交互式)
+- 逐行处理
+- 可以对文本进行增删改查等操作
+
+语法：
+
+`` sed [选项] '[定位符]指令' 文件名``
+
+或者通过管道，命令| `` sed [选项] '[定位符]指令' 文件名``
+
+常用命令选项
+
+- -n :屏蔽默认输出
+- -i: 直接修改源文件
+- -r: 支持扩展正则
+
+常用sed指令
+
+- p(print)：打印行
+- d(delete)：删除行
+- c(replace)：替换行
+- s(substitution)：替换关键词
+- =：打印行号
+
+```sh
+[root@localhost ~]# sed -n '3p' /etc/passwd  #打印第三行，3指第三行，p指打印，默认是全文打印加了-n则关闭全文打印
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+[root@localhost ~]# sed -n '1,3p' /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+```
+
+#### 行号定位
+
+sed可以使用行号来定位自己需要修改的数据内容
+
+```sh
+sed -n '3p' /etc/passwd			#打印第三行
+sed -n '1,3p' /etc/passwd		#打印1到3行
+sed -n '1~2p' /etc/passwd		#第1行开始，步长为2
+sed -n '2~2p' /etc/passwd		#第2行开始，步长为2
+sed -n '2,+3p'/etc/passwd		#第2行以及后面的3行
+```
+
+#### 正则定位
+
+```sh
+grep ^root /etc/passwd		#过滤root开头的行
+sed -n '/^root/p' /etc/passwd	
+grep "[0-9]{3}" /etc/passwd		#过滤包含3个数字的行
+sed -rn '/[0-9]{3}/p' /etc/passwd #因为使用扩展正则，所以是-r
+```
+
+#### 多行文本处理
+
+- i(insert)
+- a(append)
+- r(read)
+- w(write)
+
+Insert（插入，行前写入）
+
+```sh
+vim test.txt
+2046 2048 2046 2046
+1001 2046 2999 1888
+2046 2046 2046 2046
+
+
+[root@localhost ~]# sed '2i ABC_XYZ' test.txt
+2046 2048 2046 2046
+ABC_XYZ
+1001 2046 2999 1888
+2046 2046 2046 2046
+
+[root@localhost ~]# sed '3i ABC_XYZ' test.txt
+2046 2048 2046 2046
+1001 2046 2999 1888
+ABC_XYZ
+2046 2046 2046 2046
+
+[root@localhost ~]# sed '/2046/i ABC\nXYZ' test.txt
+ABC
+XYZ
+2046 2048 2046 2046
+ABC
+XYZ
+1001 2046 2999 1888
+ABC
+XYZ
+2046 2046 2046 2046
+
+[root@localhost ~]# sed '/1888/i ABC\nXYZ' test.txt
+2046 2048 2046 2046
+ABC
+XYZ
+1001 2046 2999 1888
+2046 2046 2046 2046
+```
+
+Append（追加，行后写入）
+
+```sh
+[root@localhost ~]# sed '2a ABC_XYZ' test.txt
+2046 2048 2046 2046
+1001 2046 2999 1888
+ABC_XYZ
+2046 2046 2046 2046
+
+```
+
+Read（将其他文件的内容导入）
+
+```sh
+[root@localhost ~]# cat /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+[root@localhost ~]# sed '2r /etc/hosts' test.txt
+2046 2048 2046 2046
+1001 2046 2999 1888
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+2046 2046 2046 2046
+
+```
+
+Write（将文件内容导出另存到其他文件）
+
+```sh
+#将test.txt文件的所有内容另存为一个新文件copy_test.txt
+sed 'W copy_test.txt' test.txt
+#将test.txt文件中所有包含1888的行另存为新文件1888.txt
+sed '/1888/w 1888.txt' test.txt
+#将test.txt文件的2到3行另存为新文件line.txt
+sed '2,3w line.txt' test.txt
+```
+
+#### 实例
+
+过滤数据
+
+```sh
+#过滤网卡ip地址
+[root@localhost ~]# sed -n '/IPADDR/p' /etc/sysconfig/network-scripts/ifcfg-ens33
+IPADDR="192.168.150.220"
+
+#过滤内存信息
+[root@localhost ~]# free
+              total        used        free      shared  buff/cache   available
+Mem:        1863004      229032     1485972        9852      148000     1481696
+Swap:       2097148           0     2097148
+[root@localhost ~]# free | sed -n '/Mem/p'
+Mem:        1863004      229176     1485824        9852      148004     1481568
+
+#过滤磁盘根分区信息(根分区是以/结尾的分区)
+[root@localhost ~]# df -h
+文件系统                     容量  已用  可用 已用% 挂载点
+devtmpfs                     898M     0  898M    0% /dev
+tmpfs                        910M     0  910M    0% /dev/shm
+tmpfs                        910M  9.7M  901M    2% /run
+tmpfs                        910M     0  910M    0% /sys/fs/cgroup
+/dev/mapper/centos_192-root   17G  1.6G   16G   10% /
+/dev/sda1                   1014M  150M  865M   15% /boot
+tmpfs                        182M     0  182M    0% /run/user/0
+
+[root@localhost ~]# df -h | sed -n '/\/$/p'
+/dev/mapper/centos_192-root   17G  1.6G   16G   10% /
+
+#显示第1、3、4行内容
+[root@localhost ~]# sed -n '1p;3p;6p' /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+sync:x:5:0:sync:/sbin:/bin/sync
+
+#打印第2行以外的所有其他行内容
+[root@localhost ~]# sed -n '2!p' /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+```
+
+删除数据(不使用-i选项，源文件不会被修改)
+
+```sh
+#删除/etc/hosts全文，没有定位条件等于匹配所有行
+sed 'd' /etc/hosts
+
+cat /etc/fstab > /tmp/fstab #备份一下/etc/fstab文件
+#不包含dev的行都删除
+sed '/dev/!d' /tmp/fstab
+#删除所有以符号#开头的行
+sed '/^#/d' /tmp/fstab
+#删除空白行
+sed '/^$/d' /tmp/fstab
+```
+
+替换行
+
+```sh
+#所有行替换为123456
+sed 'c 123456' /tmp/fstab
+
+#替换IP地址
+file=/etc/sysconfig/network-scripts/ifcfg-ens33
+sed '/IPADDR/c IPADDR=1.1.1.1' $FILE
+
+sed '/127/c 127.0.0.1 localhost' /etc/hosts
+
+sed '4c xxxx' /etc/shells  #修改第四行数据改为xxxx
+```
+
+替换关键词
+
+```sh
+vim test.txt
+2046 2048 2046 2046
+1001 2046 2999 1888
+2046 2046 2046 2046
+
+#逐行处理，处理了第一个之后就不会处理后面的了
+[root@localhost ~]# sed 's/2046/XXXX/' test.txt
+XXXX 2048 2046 2046
+1001 XXXX 2999 1888
+XXXX 2046 2046 2046
+
+#加了g结尾之后则每一行的所有匹配数据都会被替换
+[root@localhost ~]# sed 's/2046/XXXX/g' test.txt
+XXXX 2048 XXXX XXXX
+1001 XXXX 2999 1888
+XXXX XXXX XXXX XXXX
+#替换每一行的第二个
+[root@localhost ~]# sed 's/2046/XXXX/2' test.txt
+2046 2048 XXXX 2046
+1001 2046 2999 1888
+2046 XXXX 2046 2046
+
+#加&的表示替换的旧的内容
+[root@localhost ~]# sed 's/2046/(&)/g' test.txt
+(2046) 2048 (2046) (2046)
+1001 (2046) 2999 1888
+(2046) (2046) (2046) (2046)
+
+#指定了第二行而不是全文替换
+[root@localhost ~]# sed '2s/2046/XXXX/g' test.txt
+2046 2048 2046 2046
+1001 XXXX 2999 1888
+2046 2046 2046 2046
+
+#2046替换为空，就是删除了2046
+[root@localhost ~]# sed '2s/2046//g' test.txt
+2046 2048 2046 2046
+1001  2999 1888
+2046 2046 2046 2046
+
+#加了—n其他行不显示
+[root@localhost ~]# sed -n '2s/2046/XXXX/' test.txt #直接执行这个因为有-n所以不会有输出
+[root@localhost ~]# sed -n '2s/2046/XXXX/p' test.txt #加了p命令所以会输出当前修改行
+1001 XXXX 2999 1888
+
+#替换符/可以换成其他字符
+[root@localhost ~]# sed 's#2046#XXXX#g' test.txt
+XXXX 2048 XXXX XXXX
+1001 XXXX 2999 1888
+XXXX XXXX XXXX XXXX
+
+sed 's,2046,XXXX,g' test.txt #,为替换符
+sed 's!2046!XXXX!g' test.txt #!为替换符
+sed 's2\20462XXXX2g' test.txt #2为替换符
+sed 's2\20462\20482g' test.txt #2为替换符
+```
+
+正则符号()具有保留的功能
+
+```sh
+[root@localhost ~]# echo "hello the world" | sed -r 's/^(.)(.*)(.)$/\3\2\1/'
+dello the worlh
+```
+
+![image-20220213162328784](shell学习.assets/image-20220213162328784.png)
+
+- (.)匹配到h
+- (.*)匹配到黑色块ello the worl
+- (.)匹配到d
+- 替换后的内容为第三部分，第二部分，第一部分
+
+打印行号：=关键符号
+
+```sh
+[root@localhost ~]# sed -n '1=' /etc/passwd #打印第一行的行号
+1
+[root@localhost ~]# sed -n '8=' /etc/passwd
+8
+[root@localhost ~]# sed -n '/root/=' /etc/passwd
+1
+10
+[root@localhost ~]# sed -n '/bash$/=' /etc/passwd #以bash结尾的行号
+1
+```
+
+点名器
+
+```sh
+vim name.txt
+李白
+杜甫
+白居易
+孟浩然
+苏轼
+```
+
+随机点名脚本
+
+```sh
+#!/bin/bash
+#功能描述：随机点名抽奖器，按ctrl+c结束脚本
+name_file="name.txt"
+line_file=$(sed -n '$='$name_file)
+while:
+	do
+	clear
+	tmp=$(sed -n "$[RANDOM%line_file+1]p" $name_file)
+	echo -e "\033[32m	随机点名器（按ctrl+c停止]：\033[0m"
+	echo -e "\033[32m##########################\033[0m"
+	echo -e "\033[32m						   \033[0m"
+	echo -e "\033[30m		   $tmp	           \033[0m"
+	echo -e "\033[32m				   		   \033[0m"
+	echo -e "\033[32m##########################\033[0m"
+	sleep 0.1
+done
+```
+
+抓取tmooc首页的所有图片
+
+```sh
+#!/bin/bash
+#功能描述：编写脚本抓取单个网页中的图片数据 $$表示当前进程的PID
+URL="/tmp/spider_$$.txt"
+
+#将网页源代码保存到文件中 -s表示静默下载，不会有输出
+curl -s http://www.tmooc.cn/ > $URL
+
+#对文件进行过滤和清洗，获取需要的种子URL链接
+echo -e "\033[32m正在获取种子URL，请稍后..\033[0m"
+sed -i '<img/!d' $URL #删除不包含<img的行
+sed -i 's/.*src="//"' $URL #删除src="及其前面的所有内容
+sed -i 's/".*//' $URL #删除"及其后面的所有内容
+echo
+
+#检测系统如果没有wget下载工具则安装该软件
+if !rpm -q wget &> /dev/null;
+then
+	yum -y install wget
+fi
+#wget为下载工具，其参数选项描述如下：-P指定将数据下载到特定目录，-q不显示下载过程
+echo -e "\033[32m正在批量下载种子数据，请稍候。。。\033[0m"
+for i in $(cat $URL)
+do
+	wget -P /tmp/ -q $i
+done
+#删除临时种子列表文件
+rm -rf $URL
+```
+
+### awk
+
+#### 基础语法
+
+- 创造者：Aho、Weinberger、Kernighan
+- 基于模式匹配检查输入文本，逐行处理并输出
+- 通常用在shell脚本中，获取指定数据
+- 单独用时，可对文本数据做统计
+
+格式1：前置命令 | awk [选项] '[条件]{指令}'
+
+格式2：awk [选项] '[条件]{指令}' 文件
+
+```sh
+[root@localhost ~]# cat hello.txt
+hello the world
+welcome to Beijing
+[root@localhost ~]# awk '{print $1,$3}' hello.txt #没有条件，直接逐行输出，$1表示第一列，$3表示第三列
+hello world
+welcome Beijing
+```
+
+常用选项：-F 可以指定分隔符，默认分隔符为（空格或Tab键）
+
+```sh
+[root@localhost ~]# awk -F: '{print $1,$3}' /etc/passwd  #以:作为分隔符
+root 0
+bin 1
+```
+
+#### awk内置变量
+
+内置变量都有特殊含义，可直接使用
+
+![image-20220213211108090](shell学习.assets/image-20220213211108090.png)
+
+```sh
+awk -F: '{print NF}' /etc/passwd #输出每行有多上列
+awk -F: '{print $NF}' /etc/passwd #总是输出最后一列
+awk -F: '{print $(NF-1)}' /etc/passwd #总是输出倒数第二列
+
+awk -F: '{print NR}' /etc/passwd #输出行号，没有条件则逐行输出
+
+[root@localhost ~]# awk -F: '{print "用户名：" $1,"UID:"$3}' /etc/passwd
+用户名：root UID:0
+用户名：bin UID:1
+```
+
+#### awk过滤的时机
+
+- 在所有行前处理，BEGIN{}
+  - 读入第一行文本之前执行
+  - 一般用来初始化操作
+- 逐行处理，{}
+  - 逐行读入文本执行相应的处理
+  - 是最常见的编辑指令块
+- 在所有行后处理，END{}
+  - 处理完最后一行文本之后执行
+  - 一般用来输出处理结果
+
+```sh
+[root@localhost ~]# awk 'BEGIN {a=34;print a+12}'  #可以用来计算加减乘除
+46
+
+#共输出19行，这是没有条件的
+[root@localhost ~]# awk '{x++;print x}' /etc/passwd
+1
+...
+19
+
+#以bash结尾的才执行X++，在所有数据处理完之后，然后输出x
+[root@localhost ~]# awk 'BEGIN{x=0}/bash$/{x++}END{print x}' /etc/passwd 
+1
+[root@localhost ~]# awk -F: 'BEGIN {print NR} END {print NR}' /etc/passwd
+0
+19
+[root@localhost ~]# wc -l /etc/passwd
+19 /etc/passwd
+```
+
+#### 基础案例
+
+过滤内存信息
+
+```
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## 参考
 
