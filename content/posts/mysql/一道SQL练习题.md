@@ -1,3 +1,12 @@
+---
+title: "一道SQL练习题"
+date: 2021-07-10T20:55:29+08:00
+toc: true
+isCJKLanguage: true
+tags: 
+  - MySQL
+---
+
 ## 表结构
 
 有三张表：students学生表,courses课程表,scores成绩表，三个表的结构如下：

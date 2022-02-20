@@ -1,3 +1,12 @@
+---
+title: "Shell学习"
+date: 2021-12-10T20:55:29+08:00
+toc: true
+isCJKLanguage: true
+tags: 
+  - Shell
+---
+
 ## 概述
 
 shell是一种解释器，用来

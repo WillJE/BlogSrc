@@ -1,4 +1,13 @@
-# [权限系统的设计模式 ACL RBAC ABAC](https://www.cnblogs.com/jpfss/p/11210653.html)
+---
+title: "权限系统的设计模式"
+date: 2021-09-10T20:55:29+08:00
+toc: true
+isCJKLanguage: true
+tags: 
+  - 权限
+---
+
+# 权限系统的设计模式 ACL RBAC ABAC
 
 ## **ACL**（Access Control List）:访问权限列表 如：
 
@@ -14,7 +23,7 @@ user2-->AC1  此时权限汇总成一个列表
 
 对权限控制比较分散，不便于管理，比如无法简单地将一组文件设置统一的权限开放给指定的一群用户
 
-![img](权限系统的设计模式 ACL RBAC ABAC.assets/1112483-20190718230406812-417601866.png)
+![img](权限系统的设计模式.assets/1112483-20190718230406812-417601866.png)
 
 ## **RBAC**(Role Base Access Control):基于角色的权限控制
 
@@ -22,9 +31,9 @@ user2-->AC1  此时权限汇总成一个列表
 
 如菜单权限的设计：用户与角色关联，角色与菜单关联
 
-![img](权限系统的设计模式 ACL RBAC ABAC.assets/1112483-20190718230557284-1879183792.png)
+![img](权限系统的设计模式.assets/1112483-20190718230557284-1879183792.png)
 
-![img](权限系统的设计模式 ACL RBAC ABAC.assets/1112483-20190718230625222-839713434.png) 
+![img](权限系统的设计模式.assets/1112483-20190718230625222-839713434.png) 
 
 ## **ABAC（Attribute Base Access Control）** 基于属性的权限控制
 

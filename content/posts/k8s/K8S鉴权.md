@@ -1,3 +1,12 @@
+---
+title: "k8s鉴权"
+date: 2021-04-25T21:23:18+08:00
+toc: true
+isCJKLanguage: true
+tags: 
+  - kubernetes
+---
+
 在k8s中，客户端对API Server访问的大体流程如下：
 
 ![apiserver访问流程](K8S鉴权.assets/apiserver访问流程.png)

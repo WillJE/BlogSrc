@@ -1,3 +1,12 @@
+---
+title: "golang设计模式"
+date: 2021-05-02T21:23:18+08:00
+toc: true
+isCJKLanguage: true
+tags: 
+  - golang
+---
+
 ## 前言
 
 设计模式 Golang实现－《研磨设计模式》读书笔记

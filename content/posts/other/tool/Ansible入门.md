@@ -1,3 +1,12 @@
+---
+title: "Ansible入门"
+date: 2021-06-10T20:55:29+08:00
+toc: true
+isCJKLanguage: true
+tags: 
+  - Ansible
+---
+
 # Ansible
 
 ## 什么是Ansible?

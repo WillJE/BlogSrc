@@ -1,3 +1,12 @@
+---
+title: "dapr入门"
+date: 2021-11-13T21:23:18+08:00
+toc: true
+isCJKLanguage: true
+tags: 
+  - dapr
+---
+
 ## Dapr是什么？
 
 Dapr 是 Distributed Application Runtime （分布式应用运行时）的缩写。

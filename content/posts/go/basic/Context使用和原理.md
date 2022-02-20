@@ -1,3 +1,13 @@
+---
+title: "Context使用和原理"
+date: 2021-06-09T21:23:18+08:00
+toc: true
+isCJKLanguage: true
+tags: 
+  - Context
+  - go
+---
+
 ## 背景
 
 上下文（Context）是 Go 语言中非常有特色的一个特性， 在 Go 1.7 版本中正式引入新标准库 context。

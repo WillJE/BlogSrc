@@ -1,3 +1,12 @@
+---
+title: "CNCF云原生"
+date: 2021-11-10T20:55:29+08:00
+toc: true
+isCJKLanguage: true
+tags: 
+  - CNCF
+---
+
 云原生计算基金会(CNCF)Cloud Native Computing Foundation是Linux基金会旗下的非盈利组织，来推动云原生计算的发展，帮助云原生技术开发人员来构建出色的产品。
 
 CNCF的成立与一个重要项目密切相关，那就是Kubernetes。K8s最早是谷歌的内部容器编排项目Borg，为了推进其发展，谷歌决定将其开源，于是跟Linux基金会在2015年一起创办了CNCF。

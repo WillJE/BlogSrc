@@ -1,4 +1,11 @@
-# CAP定理的证明
+---
+title: "CAP定理的证明"
+date: 2020-12-10T21:23:18+08:00
+toc: true
+isCJKLanguage: true
+tags: 
+  - CAP
+---
 
 关于CAP这三个特性我们就介绍完了，接下来我们试着证明一下**为什么CAP不能同时满足**。
 
