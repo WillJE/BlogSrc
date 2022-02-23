@@ -1,5 +1,5 @@
 ---
-title: "k8s概述"
+title: "kubernetes概述"
 date: 2021-04-01T16:23:40+08:00
 toc: true
 isCJKLanguage: true

@@ -1,5 +1,5 @@
 ---
-title: "Kubernetes 集群里的三种IP"
+title: "kubernetes集群里的三种IP"
 date: 2021-11-23T21:23:18+08:00
 toc: true
 isCJKLanguage: true

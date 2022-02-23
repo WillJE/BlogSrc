@@ -1,6 +1,6 @@
 ---
-title: "k8s入门"
-date: 2021-07-23T21:23:18+08:00
+title: "kubernetes基础使用（一）"
+date: 2021-05-23T21:23:18+08:00
 toc: true
 isCJKLanguage: true
 tags: 

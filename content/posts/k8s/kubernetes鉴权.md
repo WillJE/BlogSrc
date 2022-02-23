@@ -1,6 +1,6 @@
 ---
-title: "k8s鉴权"
-date: 2021-04-25T21:23:18+08:00
+title: "kubernetes鉴权"
+date: 2021-06-25T21:23:18+08:00
 toc: true
 isCJKLanguage: true
 tags: 

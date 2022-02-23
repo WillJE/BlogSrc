@@ -5,6 +5,7 @@ toc: true
 isCJKLanguage: true
 tags: 
   - dapr
+  - kubernetes
 ---
 
 ## Dapr是什么？

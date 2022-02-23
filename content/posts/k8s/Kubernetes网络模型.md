@@ -1,3 +1,12 @@
+---
+title: "Kubernetes网络模型"
+date: 2021-08-18T21:23:18+08:00
+toc: true
+isCJKLanguage: true
+tags: 
+  - kubernetes
+---
+
 关于 Pod 如何接入网络这件事情，Kubernetes 做出了明确的选择。具体来说，Kubernetes 要求所有的网络插件实现必须满足如下要求：
 
 - 所有的 Pod 可以与任何其他 Pod 直接通信，无需使用 NAT 映射（network address translation）

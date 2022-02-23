@@ -1,10 +1,10 @@
 ---
 title: "helm学习"
-date: 2021-07-01T16:23:40+08:00
+date: 2021-10-01T16:23:40+08:00
 toc: true
 isCJKLanguage: true
 tags: 
-  - kubernates
+  - kubernetes
   - helm
 ---
 

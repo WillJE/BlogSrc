@@ -1,10 +1,11 @@
 ---
-title: "简化K8s开发！OAM与DAPR云原生应用的全流程研发实战"
+title: "基于Kubernetes的多云和混合云"
 date: 2021-11-23T21:23:18+08:00
 toc: true
 isCJKLanguage: true
 tags: 
   - 云原生
+  - kubernetes
 ---
 
 
