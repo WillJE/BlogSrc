@@ -116,6 +116,21 @@ Etcd 是 K8S 集群的数据库，可以安装在任何地方，也可以与 Mas
 
 ![img](k8s概述.assets/856154-20191029231927413-1474291721.png)
 
+## kubernetes的内置资源
+
+- Pod: k8s最小的调度单位，可以将一组密切关联的容器组成一个逻辑单元，在这个单元里容器之间可以更好的共享资源。共享的资源包括：
+  - 共享存储，称为卷(Volumes)，即图上紫色圆柱
+  - 网络，每个 Pod（容器组）在集群中有个唯一的 IP，pod（容器组）中的 container（容器）共享该IP地址
+  - container（容器）的基本信息，例如容器的镜像版本，对外暴露的端口等
+- Deployment:主要用于无状态应用，用来部署多个副本的Pod，并且在Pod出现异常时帮助应用及时恢复正常。
+- Statefulset:主要用于有状态应用，可以控制Pod的启动顺序，为Pod绑定不同的存储等。
+- Job/CronJob:用于一次性和周期性的任务。
+- Daemonset:通常用来部署后台 常驻任务，会在每台Worker节点启动。
+- Service:应用的访问入口，通过selector选择具有指定label的Pod，为其提供服务发现和负载均衡的功能，每个Service都可以通过CoreDNS获取到其对应的IP。
+- Ingress:提供K8S集群外部访问应用。
+- Configmap、Secret:描述应用的配置和密钥等数据
+- PV、PVC、HostPath、EmptyDir:描述应用的各类存储
+
 ## 参考
 
 [Kubernetes 深入学习（一） —— 入门和集群安装部署](https://www.cnblogs.com/chiangchou/p/k8s-1.html)
