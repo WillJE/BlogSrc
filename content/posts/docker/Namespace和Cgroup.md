@@ -1,3 +1,11 @@
+---
+title: "Namespace和Cgroup"
+date: 2021-08-23T21:51:51+08:00
+toc: true
+isCJKLanguage: true
+tags: [docker]
+---
+
 ## 容器其实就是一种特殊的进程
 
 为什么使用容器？
@@ -68,7 +76,7 @@ lrwxrwxrwx 1 donald donald 0 Apr 22 00:00 uts -> 'uts:[4026531838]'
 donald@donald-pro:~$ 
 ```
 
-## `Cgroup`
+## `Cgroup`资源控制
 
 `Cgroup` 是 `Linux` 内核提供的一种可以限制、记录、隔离进程组（`process groups`）所使用的物理资源（如：CPU、内存、IO等等）的机制
 
